@@ -13,3 +13,4 @@ website: https://github.com/JauniKapauni
 commands:
   addperm:
   removeperm:
+  check:
