@@ -1,5 +1,7 @@
 package de.jaunikapauni.axperms;
 
+import de.jaunikapauni.axperms.command.AddPermCommand;
+import de.jaunikapauni.axperms.command.RemovePermCommand;
 import de.jaunikapauni.axperms.manager.DatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -22,6 +24,8 @@ public final class AxPerms extends JavaPlugin {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+        getCommand("addperm").setExecutor(new AddPermCommand(this));
+        getCommand("removeperm").setExecutor(new RemovePermCommand(this));
     }
 
     @Override
