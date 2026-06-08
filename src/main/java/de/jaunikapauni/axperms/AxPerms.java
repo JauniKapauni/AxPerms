@@ -17,6 +17,7 @@ public final class AxPerms extends JavaPlugin {
     @Override
     public void onEnable() {
         // Plugin startup logic
+        saveDefaultConfig();
         databaseManager = new DatabaseManager(this);
         try{
             if(databaseManager.initDatabaseTable1() == false){
