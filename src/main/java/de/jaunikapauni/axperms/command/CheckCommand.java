@@ -18,6 +18,7 @@ public class CheckCommand implements CommandExecutor {
             p.sendMessage("You don't have the permission! [axperms.check]");
             return true;
         }
+        if(args.length < 1) return false;
         String perm = args[0];
         if(p.hasPermission(perm)){
             p.sendMessage(perm);
