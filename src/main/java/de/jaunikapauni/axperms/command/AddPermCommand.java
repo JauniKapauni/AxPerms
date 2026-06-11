@@ -6,6 +6,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.Connection;
@@ -23,6 +24,15 @@ public class AddPermCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
         if(args.length < 2){
             return false;
+        }
+        if(!(sender instanceof Player)){
+            sender.sendMessage("Only players can run this command!");
+            return true;
+        }
+        Player p = (Player) sender;
+        if(!p.hasPermission("axperms.addperm")){
+            p.sendMessage("You don't have the permission! [axperms.addperm]");
+            return true;
         }
         String targetName = args[0];
         OfflinePlayer targetPlayer = Bukkit.getOfflinePlayer(targetName);
