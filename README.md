@@ -26,6 +26,11 @@ database:
   password:
 ```
 ---
+## Commands & Permissions
+- `/addperm` - `axperms.addperm`
+- `/check` - `axperms.check`
+- `/removeperm` - `axperms.removeperm`
+---
 ## Support
 Discord: [AxForge](https://discord.gg/rYSxV4daS8)
 ---
