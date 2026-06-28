@@ -48,6 +48,11 @@ public class AddPermCommand implements CommandExecutor {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        try {
+            reference.reloadPermission(p);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         return true;
     }
 }

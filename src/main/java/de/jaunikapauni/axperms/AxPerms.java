@@ -6,13 +6,24 @@ import de.jaunikapauni.axperms.command.RemovePermCommand;
 import de.jaunikapauni.axperms.listener.PlayerJoinListener;
 import de.jaunikapauni.axperms.manager.DatabaseManager;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public final class AxPerms extends JavaPlugin {
     DatabaseManager databaseManager;
     public DatabaseManager getDatabaseManager(){
         return databaseManager;
     }
+    Map<UUID, PermissionAttachment> attachments = new HashMap<>();
 
     @Override
     public void onEnable() {
@@ -44,5 +55,23 @@ public final class AxPerms extends JavaPlugin {
     public void onDisable() {
         // Plugin shutdown logic
         databaseManager.close();
+    }
+
+    public void reloadPermission(Player p) throws SQLException {
+        PermissionAttachment old = attachments.remove(p.getUniqueId());
+        if(old != null){
+            p.removeAttachment(old);
+        }
+        PermissionAttachment attachment = p.addAttachment(this);
+        attachments.put(p.getUniqueId(), attachment);
+        try(Connection conn = getDatabaseManager().getConnection()){
+            try(PreparedStatement ps = conn.prepareStatement("SELECT permission FROM perms WHERE uuid = ?")){
+                ps.setString(1, p.getUniqueId().toString());
+                ResultSet rs = ps.executeQuery();
+                while(rs.next()){
+                    attachment.setPermission(rs.getString("permission"), true);
+                }
+            }
+        }
     }
 }

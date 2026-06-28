@@ -21,7 +21,7 @@ public class PlayerJoinListener implements Listener {
     }
 
     @EventHandler
-    public void onJoin(PlayerJoinEvent e){
+    public void onJoin(PlayerJoinEvent e) throws SQLException {
         Player p = e.getPlayer();
         List<String> permissions = new ArrayList<>();
         try(Connection conn = reference.getDatabaseManager().getConnection()){
@@ -44,5 +44,6 @@ public class PlayerJoinListener implements Listener {
             }
             p.sendMessage("All permission were loaded!");
         }
+        reference.reloadPermission(p);
     }
 }
