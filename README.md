@@ -33,6 +33,7 @@ database:
 ---
 ## Support
 Discord: [AxForge](https://discord.gg/rYSxV4daS8)
+
 ---
 ## License
 AxPerms is licensed under the permissive MIT License. Please see [LICENSE](https://github.com/JauniKapauni/AxFlyBoots/blob/master/LICENSE) for more info.
