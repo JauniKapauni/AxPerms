@@ -31,7 +31,7 @@ public final class AxPerms extends JavaPlugin {
         saveDefaultConfig();
         databaseManager = new DatabaseManager(this);
         try{
-            if(databaseManager.initDatabaseTable1() == false){
+            if(databaseManager.initDatabaseTable1() && databaseManager.initDatabaseTable2() && databaseManager.initDatabaseTable3() && databaseManager.initDatabaseTable4() == false){
                 Bukkit.getLogger().severe("Error creating db table!");
                 Bukkit.getServer().shutdown();
             }
