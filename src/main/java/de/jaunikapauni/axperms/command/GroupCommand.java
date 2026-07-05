@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.SQLException;
+import java.util.Arrays;
 
 public class GroupCommand implements CommandExecutor {
 
@@ -111,6 +112,24 @@ public class GroupCommand implements CommandExecutor {
                 String childRemove = args[2];
                 reference.getGroupManager().removeInheritance(parentRemove, childRemove);
                 p.sendMessage("Inheritance removed: " + childRemove + " -> " + parentRemove);
+                return true;
+            case "setprefix":
+                if(args.length < 3){
+                    return false;
+                }
+                String prefixGroup = args[1];
+                String prefix = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
+                reference.getGroupManager().setPrefix(prefixGroup, prefix);
+                p.sendMessage("Prefix set for " + prefixGroup);
+                return true;
+            case "setsuffix":
+                if(args.length < 3){
+                    return false;
+                }
+                String suffixGroup = args[1];
+                String suffix = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
+                reference.getGroupManager().setSuffix(suffixGroup, suffix);
+                p.sendMessage("Suffix set for " + suffixGroup);
                 return true;
             default:
                 return false;

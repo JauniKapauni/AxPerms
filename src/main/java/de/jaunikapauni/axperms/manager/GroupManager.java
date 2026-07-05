@@ -166,4 +166,58 @@ public class GroupManager {
             throw new RuntimeException(e);
         }
     }
+
+    public void setPrefix(String group, String prefix){
+        try(Connection conn = reference.getDatabaseManager().getConnection()){
+            try(PreparedStatement ps = conn.prepareStatement("UPDATE groups SET prefix = ? WHERE name = ?")){
+                ps.setString(1, prefix);
+                ps.setString(2, group);
+                ps.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void setSuffix(String group, String suffix){
+        try(Connection conn = reference.getDatabaseManager().getConnection()){
+            try(PreparedStatement ps = conn.prepareStatement("UPDATE groups SET suffix = ? WHERE name = ?")){
+                ps.setString(1, suffix);
+                ps.setString(2, group);
+                ps.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public String getPrefix(String group){
+        try(Connection conn = reference.getDatabaseManager().getConnection()){
+            try(PreparedStatement ps = conn.prepareStatement("SELECT prefix FROM groups WHERE name = ?")){
+                ps.setString(1, group);
+                ResultSet rs = ps.executeQuery();
+                if(rs.next()){
+                    return rs.getString("prefix");
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return group;
+    }
+
+    public String getSuffix(String group){
+        try(Connection conn = reference.getDatabaseManager().getConnection()){
+            try(PreparedStatement ps = conn.prepareStatement("SELECT suffix FROM groups WHERE name = ?")){
+                ps.setString(1, group);
+                ResultSet rs = ps.executeQuery();
+                if(rs.next()){
+                    return rs.getString("suffix");
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return group;
+    }
 }

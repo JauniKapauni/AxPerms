@@ -48,7 +48,7 @@ public class DatabaseManager {
 
     public boolean initDatabaseTable2(){
         try(Connection conn = getConnection()){
-            try(PreparedStatement ps = conn.prepareStatement("CREATE TABLE IF NOT EXISTS groups(name VARCHAR(255) PRIMARY KEY)")){
+            try(PreparedStatement ps = conn.prepareStatement("CREATE TABLE IF NOT EXISTS groups(name VARCHAR(255) PRIMARY KEY, prefix VARCHAR(255), suffix VARCHAR(255))")){
                 ps.executeUpdate();
                 return true;
             }
