@@ -1,11 +1,15 @@
 package de.jaunikapauni.axperms.command;
 
 import de.jaunikapauni.axperms.AxPerms;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+import java.sql.SQLException;
 
 public class GroupCommand implements CommandExecutor {
 
@@ -53,6 +57,42 @@ public class GroupCommand implements CommandExecutor {
                 String permToRemove = args[2];
                 reference.getGroupManager().removePermission(groupName, permToRemove);
                 p.sendMessage("Permission " + permToRemove + " removed from group " + groupName);
+                return true;
+            case "addplayer":
+                if(args.length < 3){
+                    return false;
+                }
+                String playerNameAdd = args[1];
+                String groupAdd = args[2];
+                OfflinePlayer targetAdd = Bukkit.getOfflinePlayer(playerNameAdd);
+                reference.getGroupManager().addPlayer(targetAdd.getUniqueId(), groupAdd);
+                p.sendMessage("Added " + playerNameAdd + " to group " + groupAdd);
+                Player onlineAdd = targetAdd.getPlayer();
+                if(onlineAdd != null){
+                    try{
+                        reference.reloadPermission(onlineAdd);
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                return true;
+            case "removeplayer":
+                if(args.length < 3){
+                    return false;
+                }
+                String playerNameRemove = args[1];
+                String groupRemove = args[2];
+                OfflinePlayer targetRemove = Bukkit.getOfflinePlayer(playerNameRemove);
+                reference.getGroupManager().removePlayer(targetRemove.getUniqueId(), groupRemove);
+                p.sendMessage("Removed " + playerNameRemove + " from group " + groupRemove);
+                Player onlineRemove = targetRemove.getPlayer();
+                if(onlineRemove != null){
+                    try {
+                        reference.reloadPermission(p);
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
                 return true;
             default:
                 return false;
