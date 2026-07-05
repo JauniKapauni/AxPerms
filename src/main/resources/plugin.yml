@@ -14,3 +14,4 @@ commands:
   addperm:
   removeperm:
   check:
+  group:

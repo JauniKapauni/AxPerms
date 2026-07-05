@@ -2,6 +2,7 @@ package de.jaunikapauni.axperms;
 
 import de.jaunikapauni.axperms.command.AddPermCommand;
 import de.jaunikapauni.axperms.command.CheckCommand;
+import de.jaunikapauni.axperms.command.GroupCommand;
 import de.jaunikapauni.axperms.command.RemovePermCommand;
 import de.jaunikapauni.axperms.listener.PlayerJoinListener;
 import de.jaunikapauni.axperms.manager.DatabaseManager;
@@ -47,6 +48,7 @@ public final class AxPerms extends JavaPlugin {
         getCommand("addperm").setExecutor(new AddPermCommand(this));
         getCommand("removeperm").setExecutor(new RemovePermCommand(this));
         getCommand("check").setExecutor(new CheckCommand());
+        getCommand("group").setExecutor(new GroupCommand(this));
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), this);
         getLogger().info("");
         getLogger().info("----------------------------------------");
