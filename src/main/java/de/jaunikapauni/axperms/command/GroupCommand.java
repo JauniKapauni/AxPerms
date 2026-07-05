@@ -38,9 +38,24 @@ public class GroupCommand implements CommandExecutor {
                 reference.getGroupManager().deleteGroup(groupName);
                 p.sendMessage("Group " + groupName + " was deleted!");
                 return true;
+            case "addperm":
+                if(args.length < 3){
+                    return false;
+                }
+                String permToAdd = args[2];
+                reference.getGroupManager().addPermission(groupName, permToAdd);
+                p.sendMessage("Permission " + permToAdd + " added to group " + groupName);
+                return true;
+            case "removeperm":
+                if(args.length < 3){
+                    return false;
+                }
+                String permToRemove = args[2];
+                reference.getGroupManager().removePermission(groupName, permToRemove);
+                p.sendMessage("Permission " + permToRemove + " removed from group " + groupName);
+                return true;
             default:
                 return false;
         }
-        return false;
     }
 }
