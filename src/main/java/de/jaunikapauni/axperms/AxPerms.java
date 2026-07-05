@@ -16,9 +16,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public final class AxPerms extends JavaPlugin {
     DatabaseManager databaseManager;
@@ -38,7 +36,7 @@ public final class AxPerms extends JavaPlugin {
         databaseManager = new DatabaseManager(this);
         groupManager = new GroupManager(this);
         try{
-            if(databaseManager.initDatabaseTable1() && databaseManager.initDatabaseTable2() && databaseManager.initDatabaseTable3() && databaseManager.initDatabaseTable4() == false){
+            if(databaseManager.initDatabaseTable1() && databaseManager.initDatabaseTable2() && databaseManager.initDatabaseTable3() && databaseManager.initDatabaseTable4() && databaseManager.initDatabaseTable5() == false){
                 Bukkit.getLogger().severe("Error creating db table!");
                 Bukkit.getServer().shutdown();
             }
@@ -85,11 +83,15 @@ public final class AxPerms extends JavaPlugin {
                         try(ResultSet rs1 = ps1.executeQuery()){
                             while (rs1.next()){
                                 String group = rs1.getString("group_name");
-                                try(PreparedStatement ps2 = conn.prepareStatement("SELECT permission FROM group_perms WHERE group_name = ?")){
-                                    ps2.setString(1, group);
-                                    ResultSet rs2 = ps2.executeQuery();
-                                    while (rs2.next()){
-                                        attachment.setPermission(rs2.getString("permission"), true);
+                                Set<String> allGroups = new HashSet<>();
+                                allGroups = getGroupManager().getAllInheritedGroups(group);
+                                for(String g : allGroups){
+                                    try(PreparedStatement ps2 = conn.prepareStatement("SELECT permission FROM group_perms WHERE group_name = ?")){
+                                        ps2.setString(1, g);
+                                        ResultSet rs2 = ps2.executeQuery();
+                                        while (rs2.next()){
+                                            attachment.setPermission(rs2.getString("permission"), true);
+                                        }
                                     }
                                 }
                             }

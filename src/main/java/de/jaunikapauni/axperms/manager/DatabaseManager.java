@@ -79,6 +79,17 @@ public class DatabaseManager {
         }
     }
 
+    public boolean initDatabaseTable5(){
+        try(Connection conn = getConnection()){
+            try(PreparedStatement ps = conn.prepareStatement("CREATE TABLE IF NOT EXISTS group_inheritance(parent_group VARCHAR(255), child_group VARCHAR(255), PRIMARY KEY(parent_group, child_group))")){
+                ps.executeUpdate();
+                return true;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void close(){
         if(hikari != null && !hikari.isClosed()){
             hikari.close();

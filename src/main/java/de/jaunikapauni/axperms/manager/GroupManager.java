@@ -6,9 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class GroupManager {
 
@@ -117,5 +115,55 @@ public class GroupManager {
             throw new RuntimeException(e);
         }
         return permissions;
+    }
+
+    public void addInheritance(String parent, String child){
+        try(Connection conn = reference.getDatabaseManager().getConnection()){
+            try(PreparedStatement ps = conn.prepareStatement("INSERT INTO group_inheritance(parent_group, child_group) VALUES (?, ?)")){
+                ps.setString(1, parent);
+                ps.setString(2, child);
+                ps.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void removeInheritance(String parent, String child){
+        try(Connection conn = reference.getDatabaseManager().getConnection()){
+            try(PreparedStatement ps = conn.prepareStatement("DELETE FROM group_inheritance WHERE parent_group = ? AND child_group = ?")){
+                ps.setString(1, parent);
+                ps.setString(2, child);
+                ps.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Set<String> getAllInheritedGroups(String group){
+        Set<String> result = new HashSet<>();
+        resolve(group, result);
+        return result;
+    }
+
+    public void resolve(String group, Set<String> result){
+        if(result.contains(group)){
+            return;
+        }
+        result.add(group);
+        try(Connection conn = reference.getDatabaseManager().getConnection()){
+            try(PreparedStatement ps = conn.prepareStatement("SELECT parent_group FROM group_inheritance WHERE child_group = ?")){
+                ps.setString(1, group);
+                try(ResultSet rs = ps.executeQuery()){
+                    while (rs.next()){
+                        String parent = rs.getString("parent_group");
+                        resolve(parent, result);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

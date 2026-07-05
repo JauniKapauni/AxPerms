@@ -88,11 +88,29 @@ public class GroupCommand implements CommandExecutor {
                 Player onlineRemove = targetRemove.getPlayer();
                 if(onlineRemove != null){
                     try {
-                        reference.reloadPermission(p);
+                        reference.reloadPermission(onlineRemove);
                     } catch (SQLException e) {
                         throw new RuntimeException(e);
                     }
                 }
+                return true;
+            case "addinherit":
+                if(args.length < 3){
+                    return false;
+                }
+                String parentAdd = args[1];
+                String childAdd = args[2];
+                reference.getGroupManager().addInheritance(parentAdd, childAdd);
+                p.sendMessage("Group " + childAdd + " now inherits " + parentAdd);
+                return true;
+            case "removeinherit":
+                if(args.length < 3){
+                    return false;
+                }
+                String parentRemove = args[1];
+                String childRemove = args[2];
+                reference.getGroupManager().removeInheritance(parentRemove, childRemove);
+                p.sendMessage("Inheritance removed: " + childRemove + " -> " + parentRemove);
                 return true;
             default:
                 return false;
