@@ -72,12 +72,29 @@ public final class AxPerms extends JavaPlugin {
         }
         PermissionAttachment attachment = p.addAttachment(this);
         attachments.put(p.getUniqueId(), attachment);
+        UUID uuid = p.getUniqueId();
         try(Connection conn = getDatabaseManager().getConnection()){
             try(PreparedStatement ps = conn.prepareStatement("SELECT permission FROM perms WHERE uuid = ?")){
-                ps.setString(1, p.getUniqueId().toString());
-                ResultSet rs = ps.executeQuery();
-                while(rs.next()){
-                    attachment.setPermission(rs.getString("permission"), true);
+                ps.setString(1, uuid.toString());
+                try(ResultSet rs = ps.executeQuery()){
+                    while (rs.next()){
+                        attachment.setPermission(rs.getString("permission"), true);
+                    }
+                    try(PreparedStatement ps1 = conn.prepareStatement("SELECT group_name FROM player_groups WHERE uuid = ?")){
+                        ps1.setString(1, uuid.toString());
+                        try(ResultSet rs1 = ps1.executeQuery()){
+                            while (rs1.next()){
+                                String group = rs1.getString("group_name");
+                                try(PreparedStatement ps2 = conn.prepareStatement("SELECT permission FROM group_perms WHERE group_name = ?")){
+                                    ps2.setString(1, group);
+                                    ResultSet rs2 = ps2.executeQuery();
+                                    while (rs2.next()){
+                                        attachment.setPermission(rs2.getString("permission"), true);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

@@ -21,29 +21,12 @@ public class PlayerJoinListener implements Listener {
     }
 
     @EventHandler
-    public void onJoin(PlayerJoinEvent e) throws SQLException {
+    public void onJoin(PlayerJoinEvent e){
         Player p = e.getPlayer();
-        List<String> permissions = new ArrayList<>();
-        try(Connection conn = reference.getDatabaseManager().getConnection()){
-            try(PreparedStatement ps = conn.prepareStatement("SELECT permission FROM perms WHERE uuid = ?")){
-                ps.setString(1, e.getPlayer().getUniqueId().toString());
-                try(ResultSet rs = ps.executeQuery()){
-                    while(rs.next()){
-                        permissions.add(rs.getString("permission"));
-                    }
-                }
-            }
+        try{
+            reference.reloadPermission(p);
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
         }
-
-        if(!permissions.isEmpty()){
-            PermissionAttachment attachment = p.addAttachment(reference);
-            for(String perm : permissions){
-                attachment.setPermission(perm, true);
-            }
-            p.sendMessage("All permission were loaded!");
-        }
-        reference.reloadPermission(p);
     }
 }
