@@ -7,11 +7,13 @@ plugins {
 repositories {
     mavenCentral()
     maven("https://repo.papermc.io/repository/maven-public/")
+    maven("https://repo.extendedclip.com/releases/")
 }
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:26.1.2.build.+")
     implementation("com.zaxxer:HikariCP:7.0.2")
+    compileOnly("me.clip:placeholderapi:2.11.7")
 }
 
 java {

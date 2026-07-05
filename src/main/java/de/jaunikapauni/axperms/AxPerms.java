@@ -7,6 +7,7 @@ import de.jaunikapauni.axperms.command.RemovePermCommand;
 import de.jaunikapauni.axperms.listener.PlayerJoinListener;
 import de.jaunikapauni.axperms.manager.DatabaseManager;
 import de.jaunikapauni.axperms.manager.GroupManager;
+import de.jaunikapauni.axperms.placeholder.AxPermsPlaceholder;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachment;
@@ -48,6 +49,10 @@ public final class AxPerms extends JavaPlugin {
         getCommand("check").setExecutor(new CheckCommand());
         getCommand("group").setExecutor(new GroupCommand(this));
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), this);
+        if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null){
+            new AxPermsPlaceholder(this).register();
+            getLogger().info("Successfully registered " + getName() + " placeholders!");
+        }
         getLogger().info("");
         getLogger().info("----------------------------------------");
         getLogger().info("Name: " + getName());
