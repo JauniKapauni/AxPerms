@@ -220,4 +220,13 @@ public class GroupManager {
         }
         return group;
     }
+
+    public String getDefaultGroup(){
+        return reference.getConfig().getString("default-group" , "default");
+    }
+
+    public void setDefaultGroup(String group){
+        reference.getConfig().set("default-group", group);
+        reference.saveConfig();
+    }
 }

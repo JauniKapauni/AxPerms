@@ -131,6 +131,14 @@ public class GroupCommand implements CommandExecutor {
                 reference.getGroupManager().setSuffix(suffixGroup, suffix);
                 p.sendMessage("Suffix set for " + suffixGroup);
                 return true;
+            case "setdefault":
+                if(args.length < 2){
+                    return false;
+                }
+                String defaultGroup = args[1];
+                reference.getGroupManager().setDefaultGroup(defaultGroup);
+                p.sendMessage("Default group set to " + defaultGroup);
+                return true;
             default:
                 return false;
         }

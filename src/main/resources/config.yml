@@ -4,3 +4,4 @@ database:
   database: axperms
   username: root
   password:
+default-group: default
