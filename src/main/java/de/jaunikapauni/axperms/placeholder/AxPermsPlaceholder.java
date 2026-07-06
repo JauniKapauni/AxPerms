@@ -77,11 +77,11 @@ public class AxPermsPlaceholder extends PlaceholderExpansion {
         try{
             List<String> groups = reference.getGroupManager().getGroups(p.getUniqueId());
             if(groups.isEmpty()){
-                return "default";
+                return "empty";
             }
             return groups.get(0);
         } catch (Exception e) {
-            return "default";
+            return "none";
         }
     }
 }
