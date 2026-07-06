@@ -48,7 +48,10 @@ public class RemovePermCommand implements CommandExecutor {
             throw new RuntimeException(e);
         }
         try {
-            reference.reloadPermission(p);
+            Player onlineTarget = targetPlayer.getPlayer();
+            if(onlineTarget != null){
+                reference.reloadPermission(onlineTarget);
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
