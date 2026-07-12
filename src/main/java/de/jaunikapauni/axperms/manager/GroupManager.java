@@ -215,13 +215,14 @@ public class GroupManager {
                 ps.setString(1, group);
                 ResultSet rs = ps.executeQuery();
                 if(rs.next()){
-                    return rs.getString("suffix");
+                    String suffix = rs.getString("suffix");
+                    return suffix == null ? "" : suffix;
                 }
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return group;
+        return "";
     }
 
     public String getDefaultGroup(){
