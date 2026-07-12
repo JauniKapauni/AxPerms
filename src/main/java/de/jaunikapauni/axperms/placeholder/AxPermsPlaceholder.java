@@ -79,7 +79,8 @@ public class AxPermsPlaceholder extends PlaceholderExpansion {
             if(groups.isEmpty()){
                 return "empty";
             }
-            return groups.get(0);
+            String group = groups.get(0);
+            return group.substring(0, 1).toUpperCase() + group.substring(1);
         } catch (Exception e) {
             return "none";
         }
