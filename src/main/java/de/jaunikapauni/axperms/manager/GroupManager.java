@@ -16,9 +16,12 @@ public class GroupManager {
     }
 
     public void createGroup(String name){
+        name = name.toLowerCase();
+        boolean firstGroup = getDefaultGroup() == null;
         try(Connection conn = reference.getDatabaseManager().getConnection()){
-            try(PreparedStatement ps = conn.prepareStatement("INSERT INTO groups(name) VALUES (?)")){
+            try(PreparedStatement ps = conn.prepareStatement("INSERT INTO groups(name, is_default) VALUES (?, ?)")){
                 ps.setString(1, name);
+                ps.setBoolean(2, firstGroup);
                 ps.executeUpdate();
             }
         } catch (SQLException e) {
@@ -222,11 +225,30 @@ public class GroupManager {
     }
 
     public String getDefaultGroup(){
-        return reference.getConfig().getString("default-group" , "default");
+        try(Connection conn = reference.getDatabaseManager().getConnection()){
+            try(PreparedStatement ps = conn.prepareStatement("SELECT name FROM groups WHERE is_default = TRUE")){
+                ResultSet rs = ps.executeQuery();
+                if(rs.next()){
+                    return rs.getString("name");
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
     }
 
     public void setDefaultGroup(String group){
-        reference.getConfig().set("default-group", group);
-        reference.saveConfig();
+        try(Connection conn = reference.getDatabaseManager().getConnection()){
+            try(PreparedStatement ps = conn.prepareStatement("UPDATE groups SET is_default = FALSE")){
+                ps.executeUpdate();
+            }
+            try(PreparedStatement ps2 = conn.prepareStatement("UPDATE groups SET is_default = TRUE WHERE name = ?")){
+                ps2.setString(1, group.toLowerCase());
+                ps2.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

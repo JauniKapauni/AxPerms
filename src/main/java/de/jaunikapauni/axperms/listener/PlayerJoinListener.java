@@ -25,7 +25,10 @@ public class PlayerJoinListener implements Listener {
         Player p = e.getPlayer();
         try{
             if(reference.getGroupManager().getGroups(p.getUniqueId()).isEmpty()){
-                reference.getGroupManager().addPlayer(p.getUniqueId(), reference.getGroupManager().getDefaultGroup());
+                String defaultGroup = reference.getGroupManager().getDefaultGroup();
+                if(defaultGroup != null){
+                    reference.getGroupManager().addPlayer(p.getUniqueId(), defaultGroup);
+                }
             }
             reference.reloadPermission(p);
         } catch (SQLException ex) {
