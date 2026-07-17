@@ -48,7 +48,7 @@ public class DatabaseManager {
 
     public boolean initDatabaseTable2(){
         try(Connection conn = getConnection()){
-            try(PreparedStatement ps = conn.prepareStatement("CREATE TABLE IF NOT EXISTS groups(name VARCHAR(255) PRIMARY KEY, prefix VARCHAR(255), suffix VARCHAR(255), is_default BOOLEAN DEFAULT FALSE)")){
+            try(PreparedStatement ps = conn.prepareStatement("CREATE TABLE IF NOT EXISTS groups(name VARCHAR(64) PRIMARY KEY, prefix VARCHAR(255), suffix VARCHAR(255), is_default BOOLEAN DEFAULT FALSE)")){
                 ps.executeUpdate();
                 return true;
             }
@@ -59,7 +59,7 @@ public class DatabaseManager {
 
     public boolean initDatabaseTable3(){
         try(Connection conn = getConnection()){
-            try(PreparedStatement ps = conn.prepareStatement("CREATE TABLE IF NOT EXISTS group_perms(group_name VARCHAR(255), permission VARCHAR(255), PRIMARY KEY(group_name, permission))")){
+            try(PreparedStatement ps = conn.prepareStatement("CREATE TABLE IF NOT EXISTS group_perms(group_name VARCHAR(64), permission VARCHAR(255), PRIMARY KEY(group_name, permission))")){
                 ps.executeUpdate();
                 return true;
             }
@@ -70,7 +70,7 @@ public class DatabaseManager {
 
     public boolean initDatabaseTable4(){
         try(Connection conn = getConnection()){
-            try(PreparedStatement ps = conn.prepareStatement("CREATE TABLE IF NOT EXISTS player_groups(uuid VARCHAR(36), group_name VARCHAR(255), PRIMARY KEY(uuid, group_name))")){
+            try(PreparedStatement ps = conn.prepareStatement("CREATE TABLE IF NOT EXISTS player_groups(uuid VARCHAR(36), group_name VARCHAR(64), PRIMARY KEY(uuid, group_name))")){
                 ps.executeUpdate();
                 return true;
             }
