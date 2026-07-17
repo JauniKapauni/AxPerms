@@ -37,7 +37,7 @@ public class DatabaseManager {
 
     public boolean initDatabaseTable1(){
         try(Connection conn = getConnection()){
-            try(PreparedStatement ps = conn.prepareStatement("CREATE TABLE IF NOT EXISTS perms(uuid VARCHAR(255), permission VARCHAR(255))")){
+            try(PreparedStatement ps = conn.prepareStatement("CREATE TABLE IF NOT EXISTS perms(uuid VARCHAR(36), permission VARCHAR(255), PRIMARY KEY(uuid, permission))")){
                 ps.executeUpdate();
                 return true;
             }
@@ -59,7 +59,7 @@ public class DatabaseManager {
 
     public boolean initDatabaseTable3(){
         try(Connection conn = getConnection()){
-            try(PreparedStatement ps = conn.prepareStatement("CREATE TABLE IF NOT EXISTS group_perms(group_name VARCHAR(255), permission VARCHAR(255))")){
+            try(PreparedStatement ps = conn.prepareStatement("CREATE TABLE IF NOT EXISTS group_perms(group_name VARCHAR(255), permission VARCHAR(255) PRIMARY KEY(group_name, permission))")){
                 ps.executeUpdate();
                 return true;
             }
@@ -70,7 +70,7 @@ public class DatabaseManager {
 
     public boolean initDatabaseTable4(){
         try(Connection conn = getConnection()){
-            try(PreparedStatement ps = conn.prepareStatement("CREATE TABLE IF NOT EXISTS player_groups(uuid VARCHAR(255), group_name VARCHAR(255))")){
+            try(PreparedStatement ps = conn.prepareStatement("CREATE TABLE IF NOT EXISTS player_groups(uuid VARCHAR(36), group_name VARCHAR(255) PRIMARY KEY(uuid, group_name))")){
                 ps.executeUpdate();
                 return true;
             }
