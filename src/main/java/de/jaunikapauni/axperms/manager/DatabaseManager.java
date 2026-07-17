@@ -59,7 +59,7 @@ public class DatabaseManager {
 
     public boolean initDatabaseTable3(){
         try(Connection conn = getConnection()){
-            try(PreparedStatement ps = conn.prepareStatement("CREATE TABLE IF NOT EXISTS group_perms(group_name VARCHAR(255), permission VARCHAR(255) PRIMARY KEY(group_name, permission))")){
+            try(PreparedStatement ps = conn.prepareStatement("CREATE TABLE IF NOT EXISTS group_perms(group_name VARCHAR(255), permission VARCHAR(255), PRIMARY KEY(group_name, permission))")){
                 ps.executeUpdate();
                 return true;
             }
