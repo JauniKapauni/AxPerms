@@ -70,7 +70,7 @@ public class DatabaseManager {
 
     public boolean initDatabaseTable4(){
         try(Connection conn = getConnection()){
-            try(PreparedStatement ps = conn.prepareStatement("CREATE TABLE IF NOT EXISTS player_groups(uuid VARCHAR(36), group_name VARCHAR(255) PRIMARY KEY(uuid, group_name))")){
+            try(PreparedStatement ps = conn.prepareStatement("CREATE TABLE IF NOT EXISTS player_groups(uuid VARCHAR(36), group_name VARCHAR(255), PRIMARY KEY(uuid, group_name))")){
                 ps.executeUpdate();
                 return true;
             }
