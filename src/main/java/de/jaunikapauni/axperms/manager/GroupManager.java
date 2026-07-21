@@ -97,6 +97,7 @@ public class GroupManager {
     }
 
     public void removePlayer(UUID uuid, String group){
+        group = group.toLowerCase();
         try(Connection conn = reference.getDatabaseManager().getConnection()){
             try(PreparedStatement ps = conn.prepareStatement("DELETE FROM player_groups WHERE uuid = ? AND group_name = ?")){
                 ps.setString(1, uuid.toString());
@@ -106,6 +107,7 @@ public class GroupManager {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        reference.getCacheManager().removePlayerGroup(uuid, group);
     }
 
     public List<String> getGroups(UUID uuid){
