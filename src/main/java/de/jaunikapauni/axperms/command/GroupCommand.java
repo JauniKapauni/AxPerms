@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.Locale;
 
 public class GroupCommand implements CommandExecutor {
 
@@ -48,8 +49,13 @@ public class GroupCommand implements CommandExecutor {
                     return false;
                 }
                 String permToAdd = args[2];
-                reference.getGroupManager().addPermission(groupName, permToAdd);
-                p.sendMessage("Permission " + permToAdd + " added to group " + groupName);
+                String groupNameAddPerm = args[1].toLowerCase();
+                if(!reference.getCacheManager().groupExists(groupNameAddPerm)){
+                    p.sendMessage("Group " + groupNameAddPerm + " does not exist!");
+                    return true;
+                }
+                reference.getGroupManager().addPermission(groupNameAddPerm, permToAdd);
+                p.sendMessage("Permission " + permToAdd + " added to group " + groupNameAddPerm);
                 return true;
             case "removeperm":
                 if(args.length < 3){
