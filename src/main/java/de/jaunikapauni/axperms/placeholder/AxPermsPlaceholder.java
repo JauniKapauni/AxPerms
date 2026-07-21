@@ -8,6 +8,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
 public class AxPermsPlaceholder extends PlaceholderExpansion {
 
@@ -48,41 +50,29 @@ public class AxPermsPlaceholder extends PlaceholderExpansion {
     }
 
     public String getPrefix(OfflinePlayer p){
-        try{
-            List<String> groups = reference.getGroupManager().getGroups(p.getUniqueId());
-            if(groups.isEmpty()){
-                return "";
-            }
-            String group = groups.get(0);
-            return reference.getGroupManager().getPrefix(group);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        Set<String> groups = reference.getCacheManager().getPlayerGroups(p.getUniqueId());
+        if(groups.isEmpty()){
+            return "";
         }
+        String group = groups.iterator().next();
+        return reference.getCacheManager().getGroupPrefix(group);
     }
 
     public String getSuffix(OfflinePlayer p){
-        try{
-            List<String> groups = reference.getGroupManager().getGroups(p.getUniqueId());
-            if(groups.isEmpty()){
-                return "";
-            }
-            String group = groups.get(0);
-            return reference.getGroupManager().getSuffix(group);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        Set<String> groups = reference.getCacheManager().getPlayerGroups(p.getUniqueId());
+        if(groups.isEmpty()){
+            return "";
         }
+        String group = groups.iterator().next();
+        return reference.getCacheManager().getGroupSuffix(group);
     }
 
     public String getPrimaryGroup(OfflinePlayer p){
-        try{
-            List<String> groups = reference.getGroupManager().getGroups(p.getUniqueId());
-            if(groups.isEmpty()){
-                return "empty";
-            }
-            String group = groups.get(0);
-            return group.substring(0, 1).toUpperCase() + group.substring(1);
-        } catch (Exception e) {
+        Set<String> groups = reference.getCacheManager().getPlayerGroups(p.getUniqueId());
+        if(groups.isEmpty()){
             return "none";
         }
+        String group = groups.iterator().next();
+        return group.substring(0, 1).toUpperCase() + group.substring(1);
     }
 }
