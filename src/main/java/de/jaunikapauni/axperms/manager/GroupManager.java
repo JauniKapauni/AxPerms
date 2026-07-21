@@ -75,8 +75,17 @@ public class GroupManager {
     }
 
     public void addPlayer(UUID uuid, String group){
+        group = group.toLowerCase();
         try(Connection conn = reference.getDatabaseManager().getConnection()){
-            try(PreparedStatement ps = conn.prepareStatement("INSERT INTO player_groups(uuid, group_name) VALUES (?, ?)")){
+            try(PreparedStatement check = conn.prepareStatement("SELECT 1 FROM player_groups WHERE uuid = ? AND group_name = ?")){
+                check.setString(1, uuid.toString());
+                check.setString(2, group);
+                ResultSet rs = check.executeQuery();
+                if(rs.next()){
+                    return;
+                }
+            }
+            try(PreparedStatement ps = conn.prepareStatement("INSERT INTO player_groups (uuid, group_name) VALUES (?, ?)")){
                 ps.setString(1, uuid.toString());
                 ps.setString(2, group);
                 ps.executeUpdate();
@@ -84,6 +93,7 @@ public class GroupManager {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        reference.getCacheManager().addPlayerGroup(uuid, group);
     }
 
     public void removePlayer(UUID uuid, String group){
