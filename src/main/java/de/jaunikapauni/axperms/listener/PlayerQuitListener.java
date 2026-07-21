@@ -7,6 +7,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.permissions.PermissionAttachment;
 
+import java.util.UUID;
+
 public class PlayerQuitListener implements Listener {
 
     AxPerms reference;
@@ -17,9 +19,11 @@ public class PlayerQuitListener implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent e){
         Player p = e.getPlayer();
-        PermissionAttachment attachment = reference.getAttachments().remove(p.getUniqueId());
-        if(attachment != null){
-            p.removeAttachment(attachment);
+        UUID uuid = p.getUniqueId();
+        PermissionAttachment permissionAttachment = reference.getAttachments().remove(uuid);
+        if(permissionAttachment != null){
+            p.removeAttachment(permissionAttachment);
         }
+        reference.getCacheManager().removePlayer(uuid);
     }
 }
