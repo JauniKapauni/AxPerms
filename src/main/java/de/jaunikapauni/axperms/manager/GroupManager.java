@@ -260,4 +260,19 @@ public class GroupManager {
             }
         }
     }
+
+    public Set<String> loadPlayerGroupsFromDB(UUID uuid) throws SQLException {
+        Set<String> groups = new HashSet<>();
+        try(Connection conn = reference.getDatabaseManager().getConnection()){
+            try(PreparedStatement ps = conn.prepareStatement("SELECT group_name FROM player_groups WHERE uuid = ?")){
+                ps.setString(1, uuid.toString());
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()){
+                    groups.add(rs.getString("group_name"));
+                }
+            }
+        }
+        reference.getCacheManager().setPlayerGroups(uuid, groups);
+        return groups;
+    }
 }
