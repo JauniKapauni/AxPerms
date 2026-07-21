@@ -17,15 +17,23 @@ public class GroupManager {
 
     public void createGroup(String name){
         name = name.toLowerCase();
-        boolean firstGroup = getDefaultGroup() == null;
+        if(reference.getCacheManager().groupExists(name)){
+            return;
+        }
+        boolean firstGroup = reference.getCacheManager().getDefaultGroup() == null;
         try(Connection conn = reference.getDatabaseManager().getConnection()){
-            try(PreparedStatement ps = conn.prepareStatement("INSERT INTO groups(name, is_default) VALUES (?, ?)")){
+            try(PreparedStatement ps = conn.prepareStatement("INSERT INTO groups (name, is_default) VALUES (?, ?)")){
                 ps.setString(1, name);
                 ps.setBoolean(2, firstGroup);
                 ps.executeUpdate();
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+        reference.getCacheManager().setGroupPrefix(name, "");
+        reference.getCacheManager().setGroupSuffix(name, "");
+        if(firstGroup){
+            reference.getCacheManager().setDefaultGroup(name);
         }
     }
 
