@@ -38,6 +38,7 @@ public class GroupManager {
     }
 
     public void deleteGroup(String name){
+        name = name.toLowerCase();
         try(Connection conn = reference.getDatabaseManager().getConnection()){
             try(PreparedStatement ps = conn.prepareStatement("DELETE FROM groups WHERE name = ?")){
                 ps.setString(1, name);
@@ -46,6 +47,7 @@ public class GroupManager {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        reference.getCacheManager().removeGroup(name);
     }
 
     public void addPermission(String group, String permission){
