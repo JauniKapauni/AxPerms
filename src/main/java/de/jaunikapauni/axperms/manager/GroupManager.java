@@ -252,4 +252,57 @@ public class GroupManager {
             throw new RuntimeException(e);
         }
     }
+
+    public void loadAllGroupsIntoCache() throws SQLException {
+        try(Connection conn = reference.getDatabaseManager().getConnection()){
+            try(PreparedStatement ps = conn.prepareStatement("SELECT name, prefix, suffix, is_default FROM groups")){
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()){
+                    String name = rs.getString("name");
+                    String prefix = rs.getString("prefix");
+                    String suffix = rs.getString("suffix");
+                    boolean isDefault = rs.getBoolean("is_default");
+                    reference.getCacheManager().setGroupPrefix(name, prefix == null ? "" : prefix);
+                    reference.getCacheManager().setGroupSuffix(name, prefix == null ? "" : suffix);
+                    if(isDefault){
+                        reference.getCacheManager().setDefaultGroup(name);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        try(Connection conn = reference.getDatabaseManager().getConnection()){
+            try(PreparedStatement ps = conn.prepareStatement("SELECT group_name, permission FROM group_perms")){
+                ResultSet rs = ps.executeQuery();
+                Map<String, Set<String>> groupPerms = new HashMap<>();
+                while (rs.next()){
+                    String groupName = rs.getString("group_name");
+                    String permission = rs.getString("permission");
+                    Set<String> perms = groupPerms.computeIfAbsent(groupName, k -> new HashSet<>());
+                    perms.add(permission);
+                }
+                for(Map.Entry<String, Set<String>> entry : groupPerms.entrySet()){
+                    reference.getCacheManager().setGroupPermissions(entry.getKey(),entry.getValue());
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        try(Connection conn = reference.getDatabaseManager().getConnection()){
+            try(PreparedStatement ps = conn.prepareStatement("SELECT parent_group, child_group FROM group_inheritance")){
+                ResultSet rs = ps.executeQuery();
+                Map<String, Set<String>> inheritance = new HashMap<>();
+                while (rs.next()){
+                    String parent = rs.getString("parent_group");
+                    String child = rs.getString("child_group");
+                    Set<String> parents = inheritance.computeIfAbsent(child, k -> new HashSet<>());
+                    parents.add(parent);
+                }
+                for (Map.Entry<String, Set<String>> entry : inheritance.entrySet()){
+                    reference.getCacheManager().setGroupInheritance(entry.getKey(), entry.getValue());
+                }
+            }
+        }
+    }
 }

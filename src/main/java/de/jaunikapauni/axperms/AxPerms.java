@@ -49,6 +49,11 @@ public final class AxPerms extends JavaPlugin {
         saveDefaultConfig();
         databaseManager = new DatabaseManager(this);
         groupManager = new GroupManager(this);
+        try {
+            groupManager.loadAllGroupsIntoCache();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         cacheManager = new CacheManager();
         try {
             if (!databaseManager.initDatabaseTable1() || !databaseManager.initDatabaseTable2() || !databaseManager.initDatabaseTable3() || !databaseManager.initDatabaseTable4() || !databaseManager.initDatabaseTable5()) {
