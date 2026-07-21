@@ -13,6 +13,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 public class PlayerJoinListener implements Listener {
     AxPerms reference;
@@ -23,11 +25,13 @@ public class PlayerJoinListener implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent e){
         Player p = e.getPlayer();
+        UUID uuid = p.getUniqueId();
         try{
-            if(reference.getGroupManager().getGroups(p.getUniqueId()).isEmpty()){
+            Set<String> groups = reference.getGroupManager().loadPlayerGroupsFromDB(uuid);
+            if(groups.isEmpty()){
                 String defaultGroup = reference.getGroupManager().getDefaultGroup();
                 if(defaultGroup != null){
-                    reference.getGroupManager().addPlayer(p.getUniqueId(), defaultGroup);
+                    reference.getGroupManager().addPlayer(uuid, defaultGroup);
                 }
             }
             reference.reloadPermission(p);
