@@ -6,6 +6,7 @@ import de.jaunikapauni.axperms.command.GroupCommand;
 import de.jaunikapauni.axperms.command.RemovePermCommand;
 import de.jaunikapauni.axperms.listener.PlayerJoinListener;
 import de.jaunikapauni.axperms.listener.PlayerQuitListener;
+import de.jaunikapauni.axperms.manager.CacheManager;
 import de.jaunikapauni.axperms.manager.DatabaseManager;
 import de.jaunikapauni.axperms.manager.GroupManager;
 import de.jaunikapauni.axperms.placeholder.AxPermsPlaceholder;
@@ -33,6 +34,10 @@ public final class AxPerms extends JavaPlugin {
     public GroupManager getGroupManager() {
         return groupManager;
     }
+    CacheManager cacheManager;
+    public CacheManager getCacheManager(){
+        return cacheManager;
+    }
 
     public Map<UUID, PermissionAttachment> getAttachments() {
         return attachments;
@@ -44,6 +49,7 @@ public final class AxPerms extends JavaPlugin {
         saveDefaultConfig();
         databaseManager = new DatabaseManager(this);
         groupManager = new GroupManager(this);
+        cacheManager = new CacheManager();
         try {
             if (!databaseManager.initDatabaseTable1() || !databaseManager.initDatabaseTable2() || !databaseManager.initDatabaseTable3() || !databaseManager.initDatabaseTable4() || !databaseManager.initDatabaseTable5()) {
                 Bukkit.getLogger().severe("Error creating db table!");
