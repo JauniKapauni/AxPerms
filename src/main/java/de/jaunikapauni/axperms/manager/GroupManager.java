@@ -51,6 +51,7 @@ public class GroupManager {
     }
 
     public void addPermission(String group, String permission){
+        group = group.toLowerCase();
         try(Connection conn = reference.getDatabaseManager().getConnection()){
             try(PreparedStatement ps = conn.prepareStatement("INSERT INTO group_perms(group_name, permission) VALUES (?, ?)")){
                 ps.setString(1, group);
@@ -63,6 +64,7 @@ public class GroupManager {
     }
 
     public void removePermission(String group, String permission){
+        group = group.toLowerCase();
         try(Connection conn = reference.getDatabaseManager().getConnection()){
             try(PreparedStatement ps = conn.prepareStatement("DELETE FROM group_perms WHERE group_name = ? AND permission = ?")){
                 ps.setString(1, group);
@@ -111,6 +113,8 @@ public class GroupManager {
     }
 
     public void addInheritance(String parent, String child){
+        parent = parent.toLowerCase();
+        child = child.toLowerCase();
         try(Connection conn = reference.getDatabaseManager().getConnection()){
             try(PreparedStatement ps = conn.prepareStatement("INSERT INTO group_inheritance(parent_group, child_group) VALUES (?, ?)")){
                 ps.setString(1, parent);
@@ -123,6 +127,8 @@ public class GroupManager {
     }
 
     public void removeInheritance(String parent, String child){
+        parent = parent.toLowerCase();
+        child = child.toLowerCase();
         try(Connection conn = reference.getDatabaseManager().getConnection()){
             try(PreparedStatement ps = conn.prepareStatement("DELETE FROM group_inheritance WHERE parent_group = ? AND child_group = ?")){
                 ps.setString(1, parent);
@@ -161,6 +167,7 @@ public class GroupManager {
     }
 
     public void setPrefix(String group, String prefix){
+        group = group.toLowerCase();
         try(Connection conn = reference.getDatabaseManager().getConnection()){
             try(PreparedStatement ps = conn.prepareStatement("UPDATE groups SET prefix = ? WHERE name = ?")){
                 ps.setString(1, prefix);
@@ -173,6 +180,7 @@ public class GroupManager {
     }
 
     public void setSuffix(String group, String suffix){
+        group = group.toLowerCase();
         try(Connection conn = reference.getDatabaseManager().getConnection()){
             try(PreparedStatement ps = conn.prepareStatement("UPDATE groups SET suffix = ? WHERE name = ?")){
                 ps.setString(1, suffix);
@@ -185,17 +193,19 @@ public class GroupManager {
     }
 
     public void setDefaultGroup(String group){
+        group = group.toLowerCase();
         try(Connection conn = reference.getDatabaseManager().getConnection()){
-            try(PreparedStatement ps = conn.prepareStatement("UPDATE groups SET is_default = FALSE")){
+            try(PreparedStatement ps = conn.prepareStatement("UPDATE groups SET is_default = FALSE WHERE is_default = TRUE")){
                 ps.executeUpdate();
             }
             try(PreparedStatement ps2 = conn.prepareStatement("UPDATE groups SET is_default = TRUE WHERE name = ?")){
-                ps2.setString(1, group.toLowerCase());
+                ps2.setString(1, group);
                 ps2.executeUpdate();
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        reference.getCacheManager().setDefaultGroup(group);
     }
 
     public void loadAllGroupsIntoCache() throws SQLException {
