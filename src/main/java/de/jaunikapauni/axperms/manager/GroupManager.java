@@ -110,38 +110,6 @@ public class GroupManager {
         reference.getCacheManager().removePlayerGroup(uuid, group);
     }
 
-    public List<String> getGroups(UUID uuid){
-        List<String> groups = new ArrayList<>();
-        try(Connection conn = reference.getDatabaseManager().getConnection()){
-            try(PreparedStatement ps = conn.prepareStatement("SELECT group_name FROM player_groups WHERE uuid = ?")){
-                ps.setString(1, uuid.toString());
-                ResultSet rs = ps.executeQuery();
-                while (rs.next()){
-                    groups.add(rs.getString("group_name"));
-                }
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return groups;
-    }
-
-    public List<String> getPermissions(String group){
-        List<String> permissions = new ArrayList<>();
-        try(Connection conn = reference.getDatabaseManager().getConnection()){
-            try(PreparedStatement ps = conn.prepareStatement("SELECT permission FROM group_perms WHERE group_name = ?")){
-                ps.setString(1, group);
-                ResultSet rs = ps.executeQuery();
-                while (rs.next()){
-                    permissions.add(rs.getString("permission"));
-                }
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return permissions;
-    }
-
     public void addInheritance(String parent, String child){
         try(Connection conn = reference.getDatabaseManager().getConnection()){
             try(PreparedStatement ps = conn.prepareStatement("INSERT INTO group_inheritance(parent_group, child_group) VALUES (?, ?)")){
@@ -214,51 +182,6 @@ public class GroupManager {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public String getPrefix(String group){
-        try(Connection conn = reference.getDatabaseManager().getConnection()){
-            try(PreparedStatement ps = conn.prepareStatement("SELECT prefix FROM groups WHERE name = ?")){
-                ps.setString(1, group);
-                ResultSet rs = ps.executeQuery();
-                if(rs.next()){
-                    return rs.getString("prefix");
-                }
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return group;
-    }
-
-    public String getSuffix(String group){
-        try(Connection conn = reference.getDatabaseManager().getConnection()){
-            try(PreparedStatement ps = conn.prepareStatement("SELECT suffix FROM groups WHERE name = ?")){
-                ps.setString(1, group);
-                ResultSet rs = ps.executeQuery();
-                if(rs.next()){
-                    String suffix = rs.getString("suffix");
-                    return suffix == null ? "" : suffix;
-                }
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return "";
-    }
-
-    public String getDefaultGroup(){
-        try(Connection conn = reference.getDatabaseManager().getConnection()){
-            try(PreparedStatement ps = conn.prepareStatement("SELECT name FROM groups WHERE is_default = TRUE")){
-                ResultSet rs = ps.executeQuery();
-                if(rs.next()){
-                    return rs.getString("name");
-                }
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return null;
     }
 
     public void setDefaultGroup(String group){
