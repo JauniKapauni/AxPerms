@@ -90,41 +90,28 @@ public final class AxPerms extends JavaPlugin {
 
     public void reloadPermission(Player p) throws SQLException {
         PermissionAttachment old = attachments.remove(p.getUniqueId());
-        if (old != null) {
-            try {
-                p.removeAttachment(old);
-            } catch (IllegalArgumentException e) {
-            }
+        if(old != null){
+            p.removeAttachment(old);
         }
         PermissionAttachment attachment = p.addAttachment(this);
         attachments.put(p.getUniqueId(), attachment);
         UUID uuid = p.getUniqueId();
-        try (Connection conn = getDatabaseManager().getConnection()) {
-            try (PreparedStatement ps = conn.prepareStatement("SELECT permission FROM perms WHERE uuid = ?")) {
+        try(Connection conn = getDatabaseManager().getConnection()){
+            try(PreparedStatement ps = conn.prepareStatement("SELECT permission FROM perms WHERE uuid = ?")){
                 ps.setString(1, uuid.toString());
-                try (ResultSet rs = ps.executeQuery()) {
-                    while (rs.next()) {
-                        attachment.setPermission(rs.getString("permission"), true);
-                    }
-                    try (PreparedStatement ps1 = conn.prepareStatement("SELECT group_name FROM player_groups WHERE uuid = ?")) {
-                        ps1.setString(1, uuid.toString());
-                        try (ResultSet rs1 = ps1.executeQuery()) {
-                            while (rs1.next()) {
-                                String group = rs1.getString("group_name");
-                                Set<String> allGroups = new HashSet<>();
-                                allGroups = getGroupManager().getAllInheritedGroups(group);
-                                for (String g : allGroups) {
-                                    try (PreparedStatement ps2 = conn.prepareStatement("SELECT permission FROM group_perms WHERE group_name = ?")) {
-                                        ps2.setString(1, g);
-                                        ResultSet rs2 = ps2.executeQuery();
-                                        while (rs2.next()) {
-                                            attachment.setPermission(rs2.getString("permission"), true);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()){
+                    attachment.setPermission(rs.getString("permission"), true);
+                }
+            }
+        }
+        Set<String> playerGroups = groupManager.getAllInheritedGroups(uuid);
+        for(String group : playerGroups){
+            Set<String> allGroups = groupManager.getAllInheritedGroups(group);
+            for(String g : allGroups){
+                Set<String> perms = groupManager.getPermissions(g);
+                for(String permission : perms){
+                    attachment.setPermission(permission, true);
                 }
             }
         }
