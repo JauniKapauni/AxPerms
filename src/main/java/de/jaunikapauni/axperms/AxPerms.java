@@ -105,11 +105,11 @@ public final class AxPerms extends JavaPlugin {
                 }
             }
         }
-        Set<String> playerGroups = groupManager.getGroups(uuid);
+        Set<String> playerGroups = cacheManager.getPlayerGroups(uuid);
         for(String group : playerGroups){
             Set<String> allGroups = groupManager.getAllInheritedGroups(group);
             for(String g : allGroups){
-                Set<String> perms = groupManager.getPermissions(g);
+                Set<String> perms = cacheManager.getGroupPermissions(g);
                 for(String permission : perms){
                     attachment.setPermission(permission, true);
                 }

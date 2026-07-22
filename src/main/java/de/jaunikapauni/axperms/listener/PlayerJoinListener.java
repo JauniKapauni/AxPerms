@@ -29,7 +29,7 @@ public class PlayerJoinListener implements Listener {
         try{
             Set<String> groups = reference.getGroupManager().loadPlayerGroupsFromDB(uuid);
             if(groups.isEmpty()){
-                String defaultGroup = reference.getGroupManager().getDefaultGroup();
+                String defaultGroup = reference.getCacheManager().getDefaultGroup();
                 if(defaultGroup != null){
                     reference.getGroupManager().addPlayer(uuid, defaultGroup);
                 }
