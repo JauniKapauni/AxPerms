@@ -48,13 +48,13 @@ public final class AxPerms extends JavaPlugin {
         // Plugin startup logic
         saveDefaultConfig();
         databaseManager = new DatabaseManager(this);
+        cacheManager = new CacheManager();
         groupManager = new GroupManager(this);
         try {
             groupManager.loadAllGroupsIntoCache();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        cacheManager = new CacheManager();
         try {
             if (!databaseManager.initDatabaseTable1() || !databaseManager.initDatabaseTable2() || !databaseManager.initDatabaseTable3() || !databaseManager.initDatabaseTable4() || !databaseManager.initDatabaseTable5()) {
                 Bukkit.getLogger().severe("Error creating db table!");
@@ -105,7 +105,7 @@ public final class AxPerms extends JavaPlugin {
                 }
             }
         }
-        Set<String> playerGroups = groupManager.getAllInheritedGroups(uuid);
+        Set<String> playerGroups = groupManager.getGroups(uuid);
         for(String group : playerGroups){
             Set<String> allGroups = groupManager.getAllInheritedGroups(group);
             for(String g : allGroups){
