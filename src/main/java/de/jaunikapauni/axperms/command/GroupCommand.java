@@ -34,13 +34,15 @@ public class GroupCommand implements CommandExecutor {
             return false;
         }
         String subCommand = args[0];
-        String groupName = args[1];
+        String groupName;
         switch (subCommand.toLowerCase()){
             case "create":
+                groupName = args[1].toLowerCase();
                 reference.getGroupManager().createGroup(groupName);
                 p.sendMessage("Group " + groupName + " was created!");
                 return true;
             case "delete":
+                groupName = args[1].toLowerCase();
                 reference.getGroupManager().deleteGroup(groupName);
                 p.sendMessage("Group " + groupName + " was deleted!");
                 return true;
@@ -61,6 +63,7 @@ public class GroupCommand implements CommandExecutor {
                 if(args.length < 3){
                     return false;
                 }
+                groupName = args[1].toLowerCase();
                 String permToRemove = args[2];
                 reference.getGroupManager().removePermission(groupName, permToRemove);
                 p.sendMessage("Permission " + permToRemove + " removed from group " + groupName);
@@ -70,7 +73,7 @@ public class GroupCommand implements CommandExecutor {
                     return false;
                 }
                 String playerNameAdd = args[1];
-                String groupAdd = args[2];
+                String groupAdd = args[2].toLowerCase();
                 OfflinePlayer targetAdd = Bukkit.getOfflinePlayer(playerNameAdd);
                 reference.getGroupManager().addPlayer(targetAdd.getUniqueId(), groupAdd);
                 p.sendMessage("Added " + playerNameAdd + " to group " + groupAdd);
@@ -88,7 +91,7 @@ public class GroupCommand implements CommandExecutor {
                     return false;
                 }
                 String playerNameRemove = args[1];
-                String groupRemove = args[2];
+                String groupRemove = args[2].toLowerCase();
                 OfflinePlayer targetRemove = Bukkit.getOfflinePlayer(playerNameRemove);
                 reference.getGroupManager().removePlayer(targetRemove.getUniqueId(), groupRemove);
                 p.sendMessage("Removed " + playerNameRemove + " from group " + groupRemove);
@@ -105,8 +108,8 @@ public class GroupCommand implements CommandExecutor {
                 if(args.length < 3){
                     return false;
                 }
-                String parentAdd = args[1];
-                String childAdd = args[2];
+                String parentAdd = args[1].toLowerCase();
+                String childAdd = args[2].toLowerCase();
                 reference.getGroupManager().addInheritance(parentAdd, childAdd);
                 p.sendMessage("Group " + childAdd + " now inherits " + parentAdd);
                 return true;
@@ -114,8 +117,8 @@ public class GroupCommand implements CommandExecutor {
                 if(args.length < 3){
                     return false;
                 }
-                String parentRemove = args[1];
-                String childRemove = args[2];
+                String parentRemove = args[1].toLowerCase();
+                String childRemove = args[2].toLowerCase();
                 reference.getGroupManager().removeInheritance(parentRemove, childRemove);
                 p.sendMessage("Inheritance removed: " + childRemove + " -> " + parentRemove);
                 return true;
@@ -123,7 +126,7 @@ public class GroupCommand implements CommandExecutor {
                 if(args.length < 3){
                     return false;
                 }
-                String prefixGroup = args[1];
+                String prefixGroup = args[1].toLowerCase();
                 String prefix = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
                 reference.getGroupManager().setPrefix(prefixGroup, prefix);
                 p.sendMessage("Prefix set for " + prefixGroup);
@@ -132,7 +135,7 @@ public class GroupCommand implements CommandExecutor {
                 if(args.length < 3){
                     return false;
                 }
-                String suffixGroup = args[1];
+                String suffixGroup = args[1].toLowerCase();
                 String suffix = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
                 reference.getGroupManager().setSuffix(suffixGroup, suffix);
                 p.sendMessage("Suffix set for " + suffixGroup);
