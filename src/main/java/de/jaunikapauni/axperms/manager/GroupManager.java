@@ -61,6 +61,7 @@ public class GroupManager {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        reference.getCacheManager().addGroupPermission(group, permission);
     }
 
     public void removePermission(String group, String permission){
@@ -74,6 +75,7 @@ public class GroupManager {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        reference.getCacheManager().removeGroupPermission(group, permission);
     }
 
     public void addPlayer(UUID uuid, String group){
@@ -124,6 +126,7 @@ public class GroupManager {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        reference.getCacheManager().addInheritance(parent, child);
     }
 
     public void removeInheritance(String parent, String child){
@@ -138,6 +141,7 @@ public class GroupManager {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        reference.getCacheManager().removeInheritance(parent, child);
     }
 
     public Set<String> getAllInheritedGroups(String group){
@@ -177,6 +181,7 @@ public class GroupManager {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        reference.getCacheManager().setGroupPrefix(group, prefix);
     }
 
     public void setSuffix(String group, String suffix){
@@ -190,6 +195,7 @@ public class GroupManager {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        reference.getCacheManager().setGroupSuffix(group, suffix);
     }
 
     public void setDefaultGroup(String group){
