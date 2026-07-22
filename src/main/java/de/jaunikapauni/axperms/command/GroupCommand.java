@@ -110,6 +110,14 @@ public class GroupCommand implements CommandExecutor {
                 }
                 String parentAdd = args[1].toLowerCase();
                 String childAdd = args[2].toLowerCase();
+                if(!reference.getCacheManager().groupExists(parentAdd)){
+                    p.sendMessage("Group " + parentAdd + " does not exist!");
+                    return true;
+                }
+                if(!reference.getCacheManager().groupExists(childAdd)){
+                    p.sendMessage("Group " + childAdd + " does not exist!");
+                    return true;
+                }
                 reference.getGroupManager().addInheritance(parentAdd, childAdd);
                 p.sendMessage("Group " + childAdd + " now inherits " + parentAdd);
                 return true;
@@ -127,6 +135,10 @@ public class GroupCommand implements CommandExecutor {
                     return false;
                 }
                 String prefixGroup = args[1].toLowerCase();
+                if(!reference.getCacheManager().groupExists(prefixGroup)){
+                    p.sendMessage("Group " + prefixGroup + " does not exist!");
+                    return true;
+                }
                 String prefix = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
                 reference.getGroupManager().setPrefix(prefixGroup, prefix);
                 p.sendMessage("Prefix set for " + prefixGroup);
@@ -136,12 +148,20 @@ public class GroupCommand implements CommandExecutor {
                     return false;
                 }
                 String suffixGroup = args[1].toLowerCase();
+                if(!reference.getCacheManager().groupExists(suffixGroup)){
+                    p.sendMessage("Group " + suffixGroup + " does not exist!");
+                    return true;
+                }
                 String suffix = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
                 reference.getGroupManager().setSuffix(suffixGroup, suffix);
                 p.sendMessage("Suffix set for " + suffixGroup);
                 return true;
             case "setdefault":
                 String defaultGroup = args[1];
+                if(!reference.getCacheManager().groupExists(defaultGroup)){
+                    p.sendMessage("Group " + defaultGroup + " does not exist!");
+                    return true;
+                }
                 reference.getGroupManager().setDefaultGroup(defaultGroup);
                 p.sendMessage("Default group set to " + defaultGroup);
                 return true;
