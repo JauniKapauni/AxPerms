@@ -218,7 +218,7 @@ public class GroupManager {
                     String suffix = rs.getString("suffix");
                     boolean isDefault = rs.getBoolean("is_default");
                     reference.getCacheManager().setGroupPrefix(name, prefix == null ? "" : prefix);
-                    reference.getCacheManager().setGroupSuffix(name, prefix == null ? "" : suffix);
+                    reference.getCacheManager().setGroupSuffix(name, suffix == null ? "" : suffix);
                     if(isDefault){
                         reference.getCacheManager().setDefaultGroup(name);
                     }
