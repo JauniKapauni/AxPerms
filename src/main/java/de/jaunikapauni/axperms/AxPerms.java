@@ -51,16 +51,16 @@ public final class AxPerms extends JavaPlugin {
         cacheManager = new CacheManager();
         groupManager = new GroupManager(this);
         try {
-            groupManager.loadAllGroupsIntoCache();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        try {
             if (!databaseManager.initDatabaseTable1() || !databaseManager.initDatabaseTable2() || !databaseManager.initDatabaseTable3() || !databaseManager.initDatabaseTable4() || !databaseManager.initDatabaseTable5()) {
                 Bukkit.getLogger().severe("Error creating db table!");
                 Bukkit.getServer().shutdown();
             }
         } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            groupManager.loadAllGroupsIntoCache();
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
         getCommand("addperm").setExecutor(new AddPermCommand(this));
