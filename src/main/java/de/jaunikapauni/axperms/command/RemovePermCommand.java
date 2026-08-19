@@ -26,8 +26,8 @@ public class RemovePermCommand implements CommandExecutor {
             return true;
         }
         Player p = (Player) sender;
-        if(!p.hasPermission("axperms.remove")){
-            p.sendMessage("You don't have the permission! [axperms.remove]");
+        if(!p.hasPermission("axperms.removeperm")){
+            p.sendMessage("You don't have the permission! [axperms.removeperm]");
             return true;
         }
         if(args.length < 2){
